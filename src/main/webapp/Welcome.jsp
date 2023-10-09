@@ -7,6 +7,7 @@
 <title>Bookshop Website</title>
 </head>
 <body>
-	<h2>Welcome to this Page</h2>
+	<h3>Welcome <%= request.getAttribute("firstname") %>!</h3>
+	<p> Your emailid: <%= request.getAttribute("emailid") %></p>
 </body>
 </html>

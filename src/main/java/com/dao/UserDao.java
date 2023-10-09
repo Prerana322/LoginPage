@@ -4,6 +4,8 @@ import com.bean.User;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -11,6 +13,7 @@ import java.util.Date;
 
 public class UserDao implements IUserDao{
     private final MongoCollection<Document> usersCollection;
+    private static final Logger UserDaologger = LogManager.getLogger(UserDao.class);
     User user = new User();
 
     public UserDao(MongoDatabase db) {
@@ -27,12 +30,14 @@ public class UserDao implements IUserDao{
             int loginAttempts = userDoc.getInteger("loginAttempts", 0);
             Date blockedUntil = userDoc.getDate("blockedUntil");
             String password = userDoc.getString("password");
+            String firstname = userDoc.getString("firstname");
 
             User user = new User();
             user.setEmailid(retrievedEmail);
             user.setLoginAttempt(loginAttempts);
             user.setBlockedUntil(blockedUntil);
             user.setPassword(password);
+            user.setFirstname(firstname);
             return user;
         } else {
             // User not found in the database

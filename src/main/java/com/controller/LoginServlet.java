@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.log4j.PropertyConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
@@ -44,13 +43,16 @@ public class LoginServlet extends HttpServlet {
         String emailid = request.getParameter("emailid");
         String password = request.getParameter("password");
         PrintWriter out = response.getWriter();
+        servletLogger.info("doPost Called");
 
         // Query your database or data source to find the user by username
         User user = userService.getUserByEmail(emailid);
+        System.out.println(user.getEmailid());
+
         if (user != null) {
             // Check if the user is blocked
             if (!userService.isBlocked(emailid)) {
-                // Verify the user's password (you should use secure password hashing)
+                // Verify the user's password
                 if (userService.validatePassword(user, password)) {
                     // Successful login
                     user.setLoginAttempt(0); // Reset login attempts
@@ -59,10 +61,11 @@ public class LoginServlet extends HttpServlet {
 
                     servletLogger.info("Successfull login for user with emailid:"+emailid);
 
-                    // Set session attributes and redirect to a welcome page
-                    HttpSession session = request.getSession();
-                    session.setAttribute("emailid", emailid);
-                    response.sendRedirect("Welcome.jsp");
+                    request.setAttribute("firstname",user.getFirstname());
+                    request.setAttribute("emailid",user.getEmailid());
+                    RequestDispatcher dispatcher=request.getRequestDispatcher("Welcome.jsp");
+                    dispatcher.forward(request, response);
+                    //response.sendRedirect("Welcome.jsp");
                     return;
                 } else {
                     // Incorrect password, increment login attempts

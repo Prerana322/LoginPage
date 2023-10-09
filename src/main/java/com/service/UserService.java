@@ -29,7 +29,7 @@ public class UserService implements IUserService{
     public boolean validatePassword(User user, String password) {
         // Retrieve the stored plain text password from the user's record in the database
         String storedpassword = user.getPassword();
-
+        logger.info("Stored password and user give passwords are equal");
         // Compare the entered plain text password with the stored plain text password
         return storedpassword.equals(password);
     }
@@ -65,6 +65,7 @@ public class UserService implements IUserService{
         if (user != null) {
             Date blockedUntil = user.getBlockedUntil();
             if (blockedUntil != null) {
+                logger.info("blockedUntil is not null so,user is blocked");
                 // User is blocked
                 return true;
             }
