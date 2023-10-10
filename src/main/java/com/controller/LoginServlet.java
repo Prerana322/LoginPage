@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 
         // Query your database or data source to find the user by username
         User user = userService.getUserByEmail(emailid);
-        System.out.println(user.getEmailid());
+        //System.out.println(user.getEmailid());
 
         if (user != null) {
             // Check if the user is blocked
